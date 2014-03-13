@@ -1,0 +1,52 @@
+!!!
+%html
+  %head
+    %script(src='http://cdn.sockjs.org/sockjs-0.3.min.js')
+    %script(src='https://raw.github.com/jmesnil/stomp-websocket/master/lib/stomp.min.js')
+    %script(src='http://code.jquery.com/jquery-1.11.0.min.js')
+    :javascript
+      //var uri = JSON.parse('#{@ws_stomp_uri}');
+      var uri = { 
+        host: 'localhost',
+        port: 15674,
+        vhost: '/',
+        protocol: 'http',
+        user: 'webstomp',
+        password: 'webstomp',
+      }
+
+      var ws = new SockJS(uri.protocol + '://' + uri.host + ':' + uri.port + '/stomp');
+      var client = Stomp.over(ws);
+
+      // RabbitMQ SockJS does not support heart-beats
+      client.heartbeat.outgoing = 0;
+      client.heartbeat.incoming = 0;
+      client.debug = onDebug;
+      client.connect(uri.user, uri.password, onConnect, onError, uri.vhost);
+
+      function onConnect() {
+        var id = client.subscribe("/exchange/web/chat", function(d) {
+          var node = document.createTextNode(d.body + '\n');
+          document.getElementById('chat').appendChild(node);
+        });
+      }
+
+      function onError(e) {
+        console.log("STOMP ERROR", e);
+      }
+
+      function onDebug(m) {
+        console.log("STOMP DEBUG", m);
+      }
+
+      function sendMsg() {
+        var msg = document.getElementById('msg').value;
+        client.send('/topic/chat', { "content-type": "text/plain" }, msg);
+      }
+  %body
+    %h1 Web stomp chat
+    %pre#chat
+    %input#msg{type: 'text'}
+    %button#send{onclick: 'sendMsg()'}
+      Send
+
