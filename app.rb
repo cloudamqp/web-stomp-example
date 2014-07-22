@@ -10,8 +10,8 @@ class App < Sinatra::Base
       protocol: u.scheme.sub('amqp', 'http'),
       host: u.host,
       vhost: u.path[1..-1] || '/',
-      user: 'guest',
-      password: 'guest',
+      user: "#{u.user}-web",
+      password: 'web',
       port: u.scheme.end_with?('s') ? 443 : 15674,
     }.to_json
     haml :index

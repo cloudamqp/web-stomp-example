@@ -1,20 +1,11 @@
 !!!
 %html
   %head
-    %script(src='http://cdn.sockjs.org/sockjs-0.3.min.js')
-    %script(src='https://raw.github.com/jmesnil/stomp-websocket/master/lib/stomp.min.js')
-    %script(src='http://code.jquery.com/jquery-1.11.0.min.js')
+    %script(src='//cdnjs.cloudflare.com/ajax/libs/sockjs-client/0.3.4/sockjs.min.js')
+    %script(src='//cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js')
+    %script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js')
     :javascript
-      //var uri = JSON.parse('#{@ws_stomp_uri}');
-      var uri = { 
-        host: 'localhost',
-        port: 15674,
-        vhost: '/',
-        protocol: 'http',
-        user: 'webstomp',
-        password: 'webstomp',
-      }
-
+      var uri = JSON.parse('#{@ws_stomp_uri}');
       var ws = new SockJS(uri.protocol + '://' + uri.host + ':' + uri.port + '/stomp');
       var client = Stomp.over(ws);
 
