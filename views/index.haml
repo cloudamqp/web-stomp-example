@@ -5,7 +5,7 @@
     %script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js')
     :javascript
       var uri = JSON.parse('#{@ws_stomp_uri}');
-      var ws = new WebSocket(uri.protocol + '://' + uri.host + ':' + uri.port + '/stomp');
+      var ws = new WebSocket(uri.protocol + '://' + uri.host + ':' + uri.port + '/ws');
       var client = Stomp.over(ws);
 
       // RabbitMQ SockJS does not support heart-beats
